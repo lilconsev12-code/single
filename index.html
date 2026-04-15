@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OHMAIGAH - Single Countdown</title>
+  <style>
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, #ff4dd2 0%, #2a0d5e 24%, #080520 55%, #010007 100%);
+      color: #ffffff;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-align: center;
+      padding: 24px;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255, 95, 210, 0.24), transparent 18%),
+        radial-gradient(circle at 78% 14%, rgba(29, 240, 255, 0.18), transparent 16%),
+        radial-gradient(circle at 50% 78%, rgba(255, 221, 80, 0.16), transparent 20%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .scene {
+      position: relative;
+      width: 100%;
+      max-width: 1100px;
+      z-index: 1;
+    }
+
+    .floaters {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-card {
+      position: absolute;
+      width: 180px;
+      height: 180px;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 26px 70px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(16px);
+      transform-origin: center;
+    }
+
+    .floating-picture {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.92);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      background: linear-gradient(135deg, #ff57fc 0%, #17f6f5 45%, #f8ff5a 100%);
+      text-shadow: 0 0 24px rgba(0, 0, 0, 0.25);
+    }
+
+    .floating-picture img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .float-1 {
+      top: 8%;
+      left: 6%;
+      animation: float-1 14s ease-in-out infinite;
+    }
+
+    .float-2 {
+      top: 18%;
+      right: 10%;
+      animation: float-2 18s ease-in-out infinite;
+    }
+
+    .float-3 {
+      bottom: 10%;
+      left: 12%;
+      animation: float-3 16s ease-in-out infinite;
+    }
+
+    .float-4 {
+      bottom: 12%;
+      right: 14%;
+      animation: float-4 20s ease-in-out infinite;
+    }
+
+    @keyframes float-1 {
+      0%, 100% { transform: translate(0, 0) rotate(-5deg); }
+      50% { transform: translate(12px, 22px) rotate(3deg); }
+    }
+
+    @keyframes float-2 {
+      0%, 100% { transform: translate(0, 0) rotate(3deg); }
+      50% { transform: translate(-16px, 16px) rotate(-4deg); }
+    }
+
+    @keyframes float-3 {
+      0%, 100% { transform: translate(0, 0) rotate(1deg); }
+      50% { transform: translate(20px, -18px) rotate(-3deg); }
+    }
+
+    @keyframes float-4 {
+      0%, 100% { transform: translate(0, 0) rotate(-2deg); }
+      50% { transform: translate(-14px, -24px) rotate(2deg); }
+    }
+
+    .card {
+      position: relative;
+      max-width: 520px;
+      width: 100%;
+      background: rgba(20, 12, 42, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 32px;
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.45);
+      padding: 40px 34px;
+      backdrop-filter: blur(10px);
+      z-index: 2;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: clamp(2.25rem, 4vw, 4rem);
+      letter-spacing: -0.05em;
+    }
+
+    p.subtitle {
+      margin: 0 0 32px;
+      color: #c1b8ff;
+      font-size: 1.05rem;
+    }
+
+    .countdown {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(60px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .segment {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 18px;
+      padding: 18px 12px;
+    }
+
+    .segment .value {
+      font-size: 2.15rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .segment .label {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #b1accd;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .button-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .presave-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #1db954 0%, #0dbf62 100%);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 35px rgba(29, 185, 84, 0.25);
+    }
+
+    .presave-button:hover,
+    .presave-button:focus-visible {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 48px rgba(29, 185, 84, 0.35);
+      outline: none;
+    }
+
+    .status {
+      margin-top: 18px;
+      color: #a5a0c2;
+      font-size: 0.95rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="scene">
+    <div class="floaters" aria-hidden="true">
+      <div class="floating-card float-1">
+        <div class="floating-picture">PHOTO 1</div>
+      </div>
+      <div class="floating-card float-2">
+        <div class="floating-picture">PHOTO 2</div>
+      </div>
+      <div class="floating-card float-3">
+        <div class="floating-picture">PHOTO 3</div>
+      </div>
+      <div class="floating-card float-4">
+        <div class="floating-picture">PHOTO 4</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h1>OHMAIGAH</h1>
+      <p class="subtitle">Single drops at 12:00 AM on April 16, 2026 in your timezone</p>
+
+    <div class="countdown" aria-live="polite">
+      <div class="segment">
+        <div id="days" class="value">00</div>
+        <div class="label">Days</div>
+      </div>
+      <div class="segment">
+        <div id="hours" class="value">00</div>
+        <div class="label">Hours</div>
+      </div>
+      <div class="segment">
+        <div id="minutes" class="value">00</div>
+        <div class="label">Minutes</div>
+      </div>
+      <div class="segment">
+        <div id="seconds" class="value">00</div>
+        <div class="label">Seconds</div>
+      </div>
+    </div>
+
+    <div class="button-wrap">
+      <a class="presave-button" href="https://distrokid.com/hyperfollow/consev/ohmaigah-2" target="_blank" rel="noopener noreferrer">
+        Presave single to Spotify
+      </a>
+    </div>
+    <p class="status" id="status-text">Countdown updates automatically for your local midnight.</p>
+  </div>
+  </div>
+
+  <script>
+    function getTargetMidnight() {
+      return new Date(2026, 3, 16, 0, 0, 0, 0);
+    }
+
+    function pad(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function updateCountdown() {
+      const target = getTargetMidnight();
+      const now = new Date();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById("days").textContent = "00";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        document.getElementById("status-text").textContent = "OHMAIGAH is out now in your timezone!";
+        return;
+      }
+
+      const secondsTotal = Math.floor(diff / 1000);
+      const days = Math.floor(secondsTotal / 86400);
+      const hours = Math.floor((secondsTotal % 86400) / 3600);
+      const minutes = Math.floor((secondsTotal % 3600) / 60);
+      const seconds = secondsTotal % 60;
+
+      document.getElementById("days").textContent = pad(days);
+      document.getElementById("hours").textContent = pad(hours);
+      document.getElementById("minutes").textContent = pad(minutes);
+      document.getElementById("seconds").textContent = pad(seconds);
+      document.getElementById("status-text").textContent = `Next drop: 12:00 AM local time.`;
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
